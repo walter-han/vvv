@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>这里是H5播放器</title>
+<script type='text/javascript' src="move.js"></script>
+<script>
+    window.onload=function(){
+
+    }
+</script>
+
+<style type="text/css">
+    *{padding: 0px;font-size: 14px; margin: 0px; font-family: '微软雅黑' ;}
+    img{display: block;}
+    #div1{ width: 600px; height: 6px;border-radius:3px; background: #efefef; position: absolute; top: 500px; left: 500px; cursor:pointer }
+    #div2{ width: 300px; height: 6px;border-radius:3px; background: #8adced; position: absolute; top: 500px; left: 500px; cursor:pointer }
+    #div3{ width: 0px; height: 6px;border-radius:3px; background: #00a1d6; position: absolute; top: 500px; left: 500px; cursor:pointer }
+    #div4{ width: 14px; height: 14px;border-radius:7px; background: #fff;position: absolute;top: 497px; left: 497px;box-shadow:0px 0px 3px 1px #cbecf5; cursor:pointer;z-index: 1}
+    #div5{width: 725px; height: 400px; background: #000; position: absolute;  top: 90px; left: 465px;}
+    #div6{width: 6px; height: 6px; background: #038dba; position: absolute; left: 700px; top: 500px; display: none;}
+    #bbox{position: absolute; width: 600px; height: 48px; top: 490px;left: 500px;}
+    #video{ height: 100%; width: 100%}
+    #play{ position: absolute; left: 465px;top:492px; width: 22px; height: 22px; background: #b3babb;opacity: 0.60; background-image: url(play.png);}
+    #timebox{ width: 78px; height: 17px; background-color: #dfdfdf; position: absolute;left: 1112px;top: 494px; color: #6dbdcd;font-size: 14px;text-align:center;line-height: 17px;}
+</style>
+
+
+</head>
+
+<body>
+<div id="bbox"></div>
+    
+    <div id="div1"></div>
+    <div id="div2"></div>
+    <div id="div3"></div>
+    <div id="div4"></div>
+    <div id="div5"><video preload="auto" id='video' src='XiaoYing_Video_1465112968013.mp4'></video></div>
+    <div id="div6"></div>
+    <div id="play" type='button' value="播放"></div>
+    <div id='timebox'></div>
+
+
+</body>
+
+<script>
+function $_ID(idname){
+   return document.getElementById(idname);
+}
+var div1=$_ID('div1')
+var div2=$_ID('div2')
+var div3=$_ID('div3')
+var div4=$_ID('div4')
+var div5=$_ID('div5')
+var div6=$_ID('div6')
+var bbox=$_ID('bbox')
+var play=$_ID('play')
+div1.onmousemove=function(){
+   div6.style.display='block'
+   div6.style.left=window.event.clientX+'px'
+   
+}
+div2.onmousemove=function(){
+   div6.style.display='block'
+   div6.style.left=window.event.clientX+'px'
+   
+}
+div3.onmousemove=function(){
+   div6.style.display='block'
+   div6.style.left=window.event.clientX+'px'
+
+   
+}
+div6.onclick=function(){
+   div4.style.left=window.event.clientX-7+'px'
+   div3.style.width=parseInt(getvalue(div4,'left'))-497+'px'
+   var v=parseFloat(getvalue(div3,'width'))/600;
+    var c=parseInt(video.timebox)
+    video.currentTime=v*c
+    if(video.paused){
+       play.click() 
+    }
+}
+bbox.onmousemove=function(){
+
+   div6.style.display='block'
+   div6.style.left=window.event.clientX+'px'
+   bbox.onclick=function(){
+   div4.style.left=window.event.clientX-7+'px'
+   div3.style.width=parseInt(getvalue(div4,'left'))-497+'px' 
+   var v=parseFloat(getvalue(div3,'width'))/600;
+    var c=parseInt(video.timebox)
+    video.currentTime=v*c
+    if(video.paused){
+       play.click() 
+    }
+   }
+}
+
+
+bbox.onmouseout=function(){
+   div6.style.display='none'
+   bbox.onclick=null
+}
+
+
+div4.onmousedown=function(){
+    if(!video.paused){
+        play.click()
+    }
+    
+    div6.style.display='none'
+    this.style.background='#ffaebb'
+    this.style['box-shadow']='0px 0px 3px 1px #ffaebb'
+    div4.o=parseInt(getvalue(div4,'left'))
+    div4.onmousemove=function(){
+        if(div4.o<497){
+            console.log('我进来了')
+            div4.o=497
+            div4.style.left='497px';
+        }else if(div4.o>1097){
+            console.log('我进来了')
+            div4.o=1097
+            div4.style.left='1097px';
+        }else{
+            div4.style.left=div4.o+'px'
+            div3.style.width=div4.o-497+'px'
+           }
+           div4.o=window.event.clientX-7
+   div4.onmouseup=function(){
+    div4.onmousemove=null
+    var v=parseFloat(getvalue(div3,'width'))/600;//alert(v)
+    var c=parseInt(video.timebox)
+    video.currentTime=v*c
+    if(video.paused){
+        play.click()
+    }
+    div4.style.background='#fff'
+    div4.style['box-shadow']='0px 0px 3px 1px #cbecf5'
+
+
+    }
+
+}
+
+}
+play.onmouseover=function(){
+    moveanm(play,{'opacity':1})
+}
+play.onmouseout=function(){
+    moveanm(play,{'opacity':0.60})
+}
+var timeplay=null
+var boxwidth=null;
+var boxwidth2=null;
+play.onclick=function(){
+    if(video.paused){video.play();play.style.backgroundImage="url(pause.png)";}else{video.pause();play.style.backgroundImage="url(play.png)";}
+     if(!video.paused){
+        timeplay=setInterval(function(){
+        boxwidth=parseInt(video.currentTime)/parseInt(video.duration)
+        boxwidth2=boxwidth.toFixed(2)
+        div3.style.width=parseInt(600*boxwidth2)+'px'
+        div4.style.left=parseInt(600*boxwidth2)+497+'px'
+        if(video.ended){
+                div3.style.width=0+'px'
+                clearInterval(timeplay);
+                play.style.backgroundImage="url(play.png)"
+                div4.style.left=497+'px';
+                //alert(div4.style.left)
+                
+                console.log('s') //播放完毕
+            }
+     },500) }else{clearInterval(timeplay)}
+
+}
+video.oncanplaythrough=function(){ 
+    video.timebox=video.duration;
+   timebox.innerHTML=parseInt(video.duration/60)+':'+parseInt(video.duration-parseInt(video.duration/60)*60)
+}
+div5.onclick=function(){
+ play.click();
+}
+div5.onmouseover=function(){
+onkeydown=function(){
+    play.click();
+}
+}
+div5.onmouseout=function(){
+onkeydown=null
+}
+</script>
+
+</html>

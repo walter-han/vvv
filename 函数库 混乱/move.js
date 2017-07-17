@@ -1,0 +1,214 @@
+function getvalue(obj,name){//此函数通常只返回字符串 所有返回值需根据实际情况稍做处理
+    var value;var ienamebox;var ienamebox2;var ienamebox3;var iename;
+    if(obj.currentStyle){//IE下面
+        if(name=='opacity'){//需要取值的东西为opacity时(name=='opacity')
+            value=obj.currentStyle[name];
+            if(!value){
+                value=100;
+                return value;
+            }else{
+            value=Math.round(obj.currentStyle[name]*100);//小数部分为四舍五入
+            return value;  
+            }
+        }else if(name=='z-index'){//当取值的名字是z-index时
+            if(obj.currentStyle['zIndex']=='auto'){
+                alert('取值函数\'getvalue()\'告诉您:返回值为字符串:auto,并没有初始设置而是默认auto');
+                return obj.currentStyle['zIndex'];
+            }else{
+                obj.currentStyle['zIndex'];
+            } //两种IE特殊值取值方法与做完，如有更多继续补充  
+        }
+        
+        if(name.indexOf('-')>=0){//此处开始进行name在IE下兼容性处理 主要针对于 IE的驼峰样式名判断取值
+            ienamebox=name.split('');//将name先转变为数组 再进行替换处理
+            ienamebox[name.indexOf('-')+1]=ienamebox[name.indexOf('-')+1].toUpperCase();
+            ienamebox.splice(name.indexOf('-'),1);
+            ienamebox=ienamebox.join('');
+            if(ienamebox.indexOf('-')==-1){
+                iename=ienamebox;
+            }else if(ienamebox.indexOf('-')>=0){
+                ienamebox2=ienamebox.split('');
+                ienamebox2[ienamebox.indexOf('-')+1]=ienamebox2[ienamebox.indexOf('-')+1].toUpperCase();
+                ienamebox2.splice(ienamebox.indexOf('-'),1)
+                ienamebox2=ienamebox2.join('');
+                    if(ienamebox2.indexOf('-')==-1){
+                        iename=ienamebox2
+                    }else if(ienamebox2.indexOf('-')>=0){
+                        ienamebox3=ienamebox2.split('');
+                        ienamebox3[ienamebox2.indexOf('-')+1]=ienamebox3[ienamebox2.indexOf('-')+1].toUpperCase();
+                        ienamebox3.splice(ienamebox2.indexOf('-'),1)
+                        ienamebox3=ienamebox3.join('');
+                        iename=ienamebox3;         
+                }
+            }
+            return obj.currentStyle[iename];//到此为止兼容IE驼峰样式命名取值方法完成
+        }
+        return obj.currentStyle[name]//全面正常的返回值 name值在其他浏览器和IE完全无冲突，无兼容问题 当然对于未手动设置的只能返回默认值，默认值为auto会有提示
+    }else{//非IE下面
+        if(getComputedStyle(obj,false)[name]=='auto'){
+            console.log('取值函数\'getvalue()\'告诉您:没有手动设置'+name+'属性，返回默认值是字符串 auto ，如有需要请手动设置')
+        }
+      return getComputedStyle(obj,false)[name]
+    }
+}//取样式值函数完成
+
+//IE样式名转义函数
+function ienamecg(nameie){
+    if(nameie.indexOf('-')>=0){//此处开始进行name在IE下兼容性处理 主要针对于 IE的驼峰样式名判断取值
+            ienamebox=nameie.split('');//将name先转变为数组 再进行替换处理
+            ienamebox[nameie.indexOf('-')+1]=ienamebox[nameie.indexOf('-')+1].toUpperCase();
+            ienamebox.splice(nameie.indexOf('-'),1);
+            ienamebox=ienamebox.join('');
+            if(ienamebox.indexOf('-')==-1){
+                iename=ienamebox;
+            }else if(ienamebox.indexOf('-')>=0){
+                ienamebox2=ienamebox.split('');
+                ienamebox2[ienamebox.indexOf('-')+1]=ienamebox2[ienamebox.indexOf('-')+1].toUpperCase();
+                ienamebox2.splice(ienamebox.indexOf('-'),1)
+                ienamebox2=ienamebox2.join('');
+                    if(ienamebox2.indexOf('-')==-1){
+                        iename=ienamebox2
+                    }else if(ienamebox2.indexOf('-')>=0){
+                        ienamebox3=ienamebox2.split('');
+                        ienamebox3[ienamebox2.indexOf('-')+1]=ienamebox3[ienamebox2.indexOf('-')+1].toUpperCase();
+                        ienamebox3.splice(ienamebox2.indexOf('-'),1)
+                        ienamebox3=ienamebox3.join('');
+                        iename=ienamebox3;         
+                }
+            }
+            return iename//到此为止兼容IE驼峰样式命名取值方法完成
+        }else{
+        return nameie;
+        }//如果IE的属性名完全正常 那么直接返回正常的属性名
+}
+
+//这里开始写完美运动函数
+
+function moveanm(obj,name,hd){//他喵的 ！！！！！！他喵的 ！！！！！！他喵的 ！！！！！！他喵的 ！！！！！！他喵的 ！！！！！！他喵的 ！！！！！！
+    if(!obj.timeobj){//这个函数一律改用驼峰式命名法来传输入josn属性值！！！！！这个函数一律改用驼峰式命名法来传输入josn属性值！！！！！
+        obj.timeobj=true;//当然 也可以在输入的josn数据中属性名字用字符串包住！！！！！！！！！！！！那样就不担心IE浏览器啦！！！！！
+    };
+    clearInterval(obj.timeobj);
+    if(!obj.num){
+        obj.num=new Object()
+        obj.num.v=new Object()
+        obj.num.iectbox=null;
+    }
+    for(var i in name){
+        obj.num[i]=parseFloat(getvalue(obj,i))//;alert(obj.num[i]);//循环存入元素的当前属性值
+        obj.num.v[i]=null;//速度
+    }
+    obj.timeobj=setInterval(
+        function(){
+          var clear=true;//如果这个值一直是false那么就不会清除定时器，要当每个值都变化到tgt的情况才能清除定时器
+          var ct=null;
+            for(i in name){
+                if(i=='opacity'){
+                    if(obj.currentStyle){
+                        if(obj.num.iectbox||obj.num.iectbox===0){
+                            if(Math.round(name[i]*100)>obj.num.iectbox){
+                                obj.num.v[i]=2;
+                            }else if(Math.round(name[i]*100)<obj.num.iectbox){
+                                obj.num.v[i]=-2;
+                            }else{
+                                obj.num.v[i]=0;
+                            }
+                            obj.num.iectbox=obj.num.iectbox+obj.num.v[i];
+                            if((Math.round(name[i]*100)<=obj.num.iectbox&&obj.num.v[i]==2)||(Math.round(name[i]*100)>=obj.num.iectbox&&obj.num.v[i]==-2)||obj.num.v[i]===0){
+                                obj.num[i]=Math.round(name[i]*100);
+                                obj.num.iectbox=Math.round(name[i]*100);
+                            }
+                            if(obj.num.iectbox!=Math.round(name[i]*100)){
+                                clear=false;
+                            }
+                            obj.style.filter='alpha(opacity='+obj.num.iectbox+')'
+                            text.value=obj.num.iectbox
+                        }else{
+
+                            if(Math.round(name[i]*100)>obj.num[i]){
+                                obj.num.v[i]=2;
+                            }else if(Math.round(name[i]*100)<obj.num[i]){
+                                obj.num.v[i]=-2;
+                            }else{
+                                obj.num.v[i]=0;
+                            }
+                            obj.num[i]=obj.num[i]+obj.num.v[i];
+                            obj.num.iectbox=obj.num[i];
+                            if((Math.round(name[i]*100)<=obj.num.iectbox&&obj.num.v[i]==2)||(Math.round(name[i]*100)>=obj.num.iectbox&&obj.num.v[i]==-2)||obj.num.v[i]===0){
+                                obj.num[i]=Math.round(name[i]*100);
+                                obj.num.iectbox=Math.round(name[i]*100);
+                            }
+                            if(obj.num.iectbox!=Math.round(name[i]*100)){
+                                clear=false;
+                            }
+                            obj.style.filter='alpha(opacity='+obj.num.iectbox+')'
+                            
+                        }
+                    }else{
+                        if(name[i]>obj.num[i]){
+                            obj.num.v[i]=0.02;
+                        }else if(name[i]<obj.num[i]){
+                            obj.num.v[i]=-0.02;
+                        }else{
+                            obj.num.v[i]=0;
+                        }
+                        obj.num[i]=obj.num[i]+obj.num.v[i];
+                        ct=obj.num[i].toFixed(2);
+                        if((name[i]<=obj.num[i]&&obj.num.v[i]==0.02)||(name[i]>=obj.num[i]&&obj.num.v[i]==-0.02)||obj.num.v[i]===0){
+                            ct=name[i];
+                            obj.num[i]=name[i];
+                            console.log('我进来了')
+                        }
+                        if(obj.num[i]!=name[i]){
+                            clear=false;
+                        }
+                        obj.style[i]=ct;
+                        //obj.num[i]=ct.toFixed(2);
+                        
+
+                    }
+                    //需要变化的属性值透明度情况下做不同处理
+                }else{
+                    obj.num.v[i]=(name[i]-obj.num[i])/20;
+                        if(obj.num[i]<name[i]){
+                            if(Math.abs(obj.num.v[i])<1){
+                                obj.num.v[i]=1;
+                            }
+                        }else if(obj.num[i]>name[i]){
+                            if(Math.abs(obj.num.v[i])<1){
+                                obj.num.v[i]=-1;
+                            }
+                        }else{
+                                obj.num.v[i]=0;
+                        }
+                        obj.num[i]=obj.num[i]+obj.num.v[i]
+                           
+                        if((obj.num[i]>=name[i]&&obj.num.v[i]==1)||(obj.num[i]<=name[i]&&obj.num.v[i]==-1)||obj.num.v[i]===0){
+                           obj.num[i]=name[i];
+                           
+                        }
+                        if(obj.num[i]!=name[i]){
+                            clear=false;//这个值在定时器里的函数内部，每次运行这个函数都有重置这个属性
+                        }
+                        if(obj.currentStyle){
+                            obj.style[ienamecg(i)]=obj.num[i]+'px';
+                        }else{
+                            obj.style[i]=obj.num[i]+'px';
+                        }
+                        
+                }
+                
+            }//for的循环变化运动结束
+            if(clear){//判断所有属性值是否都到tgt，都到了这个值为true，没到就全是flase ,如果为true则开始清除定时器
+                clearInterval(obj.timeobj);//清除定时器结束
+                if(hd){
+                    hd();
+                }//回调函数开始起作用
+            }//清除定时器结束
+        }//定时器内运行的函数写完
+        ,10)
+}//这个函数输入的属性值josn数据完全可以带引号！！！！！！！！！！！！！他喵的 坑爹呢！！这个函数输入的属性值josn数据完全可以带引号！！！！！！！！！！！！！他喵的 坑爹呢！！
+
+function $_ID(idname){
+  return document.getElementById(idname)
+} //简单版取ID元素方法

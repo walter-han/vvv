@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>运动框架</title>
+
+<style type="text/css">
+    *{padding: 0px;font-size: 14px; margin: 0px; font-family: '微软雅黑' }
+    body{height: 2000px;}
+    div{ text-align: center; line-height: 40px; opacity: 0.5}
+    #div1{ width: 200px; height: 40px; background-color: #FF6666;position: absolute; top: 20px;  opacity: 0.1;filter:alpha(opacity:10)}
+    #div2{ width: 200px; height: 40px; background-color: #FF6666;position: absolute; top: 80px;  opacity: 0.1;filter:alpha(opacity:10)}
+    #div3{ width: 200px; height: 40px; background-color: #FF6666;position: absolute; top: 140px; opacity: 0.1;filter:alpha(opacity:10)}
+    #bg{ width: 1px; height: 1000px; background-color: #000; position: absolute; left: 500px; opacity: 0.1;;}
+    #bg2{ width: 1px; height: 1000px; background-color: #000; position: absolute; left:200px; opacity: 0.1;}
+</style>
+
+
+</head>
+
+<body>
+<div id='div1'>1</div>
+<div id='div2'>2</div>
+<div id='div3'>3</div>
+<div id='bg'></div>
+<div id='bg2'></div>
+<input id='input' type="text" style="position:absolute; left:500px;" value="">
+
+</body>
+
+<script>
+function getstyle(obj,sx){
+    if(obj.currentStyle){
+        if(sx=='opacity'){
+            return obj.currentStyle[sx]
+        };
+        return parseInt(obj.currentStyle[sx]);
+    }else{
+        if(sx=='opacity'){
+            return getComputedStyle(obj,false)[sx]
+        };
+        return parseInt(getComputedStyle(obj,false)[sx]);
+    }}
+
+function start(o,sx,jl,sj){
+
+    if(sx=='opacity'){
+        var biao;
+        clearInterval(o.opatime);
+        var opadq=parseInt((getstyle(o,'opacity'))*100);
+        var opasd;
+        if(opadq<jl){
+            opasd=2;biao=1
+        }else if(opadq>jl){
+            opasd=-2;biao=2
+        }else{
+            biao=3;opasd=0;
+        }
+        //console.log(biao);
+        o.opatime=setInterval(function(){
+            opadq=opadq+opasd;
+
+            o.style.opacity=Math.abs(opadq/100);
+            o.style.filter="alpha(opacity:"+opadq+")"
+            if(biao==1){
+                if(opadq>=jl){ clearInterval(o.opatime); }
+            } else if(biao==2){
+                if(opadq<=jl){ clearInterval(o.opatime); }
+            }else if(biao==3){
+                 clearInterval(o.opatime);
+            }
+            
+            document.title=o.style.opacity;
+            document.getElementById('input').value=opadq;
+        },sj)
+    return;
+    }
+    
+
+
+    clearInterval(o.time);
+    var dq=getstyle(o,sx);
+    var zj;
+    o.time=setInterval(function(){
+        var sd;
+        dq=getstyle(o,sx);
+        if(jl-dq>0){
+            sd=Math.ceil((jl-dq)/20)
+        }else if(jl-dq<0){
+            sd=Math.floor((jl-dq)/20)
+        }else{
+            sd=0
+        }
+        
+        zj=dq+sd;
+        o.style[sx]=zj+'px'
+        if(jl-dq==0){clearInterval(o.time);}
+    },sj)
+}
+
+var div1=document.getElementById('div1');div1.time=null;div1.opatime=null;
+var div2=document.getElementById('div2');div2.time=null;div2.opatime=null;
+var div3=document.getElementById('div3');div3.time=null;div3.opatime=null;
+div1.onmouseover=function(){ start(this,'width',500,10); start(this,'opacity',100,10)   };
+div1.onmouseout=function(){  start(this,'width',200,10); start(this,'opacity',10,10) };
+
+div2.onmouseover=function(){ start(this,'width',500,10); start(this,'opacity',100,10)   };
+div2.onmouseout=function(){  start(this,'width',200,10); start(this,'opacity',10,10)   };
+
+div3.onmouseover=function(){ start(this,'width',500,10); start(this,'opacity',100,10)   };
+div3.onmouseout=function(){  start(this,'width',200,10); start(this,'opacity',10,10)   };
+
+
+
+
+/*if(sx=='opacity'){
+        var biao;
+        clearInterval(o.opatime);
+        var opadq=parseInt((getstyle(o,'opacity'))*100);
+        var opasd;
+        if(opadq<jl){opasd=2;biao=1}else if(opadq>jl){opasd=-2;biao=2}
+        o.opatime=setInterval(function(){
+            opadq=opadq+opasd
+            o.style.opacity=Math.abs(opadq/100);
+            if(biao==1){
+                if(opadq>=jl){ clearInterval(o.opatime); }
+            } else if(biao==2){
+                if(opadq<=jl){ clearInterval(o.opatime); }
+            };
+            
+            document.title=o.style.opacity;
+            document.getElementById('input').value=opadq;
+        },sj)
+    return;
+    }*/
+
+</script>
+
+</html>

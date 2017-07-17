@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>canvas</title>
+
+<style type="text/css">
+    *{padding: 0px;font-size: 14px; margin: 0px; font-family: '微软雅黑' ;}
+    img{display: block;}
+    #div1{width: 500px; height: 500px; margin:auto; border: 1px #333 solid; margin-top:50px; background-color: #666 }
+
+</style>
+</head>
+
+<body>
+<div id='div1'>
+  <canvas id='canvas2' width="500" height="500"> <!--不要使用ID(CSS),和style的样式来规定canvas的宽高 否者会造成拉伸问题  ！！！！！一定要用canvas的属性来设置 就像这个标签!!-->
+    
+  </canvas>  
+
+</div>
+
+
+</body>
+
+<script>
+
+
+var canvas2=document.getElementById('canvas2')
+//开始获取2D上下文
+var canvas2D=canvas2.getContext('2d')
+
+
+
+var div1=document.getElementById('div1')
+var xztime=null
+var n=1
+
+window.onload=function(){
+    xztime=setInterval(xz,1)
+}
+function xz(){
+
+    div1.onmouseover=function(){
+clearInterval(xztime) 
+}
+div1.onmouseout=function(){
+    xztime=setInterval(xz,1)
+}
+n=n+0.01;
+canvas2D.clearRect(0,0,500,500)
+canvas2D.save()
+
+canvas2D.translate(200,200)
+canvas2D.rotate(n)
+canvas2D.beginPath()
+canvas2D.arc(0,0,100,Math.PI*0.5,Math.PI*1.5,false)
+canvas2D.closePath()
+canvas2D.fillStyle='rgba(0,0,0,1)'
+canvas2D.fill()
+
+canvas2D.beginPath()
+canvas2D.arc(0,0,100,Math.PI*1.5,Math.PI*0.5,false)
+canvas2D.closePath()
+canvas2D.fillStyle='rgba(255,255,255,1)'
+canvas2D.fill()
+
+canvas2D.beginPath()
+canvas2D.arc(0,50,50,0,Math.PI*2,false)
+canvas2D.closePath()
+canvas2D.fillStyle='rgba(255,255,255,1)'
+canvas2D.fill()
+
+canvas2D.beginPath()
+canvas2D.arc(0,-50,50,0,Math.PI*2,false)
+canvas2D.closePath()
+canvas2D.fillStyle='rgba(0,0,0,1)'
+canvas2D.fill()
+
+canvas2D.beginPath()
+canvas2D.arc(0,50,10,0,Math.PI*2,false)
+canvas2D.closePath()
+canvas2D.fillStyle='rgba(0,0,0,1)'
+canvas2D.fill()
+
+canvas2D.beginPath()
+canvas2D.arc(0,-50,10,0,Math.PI*2,false)
+canvas2D.closePath()
+canvas2D.fillStyle='rgba(255,255,255,1)'
+canvas2D.fill()
+
+canvas2D.restore()
+}
+
+
+
+
+
+
+
+//开始绘制路径版本的形状
+// canvas2D.beginPath()
+// canvas2D.moveTo(400,400)
+// canvas2D.lineTo(100,100)
+// canvas2D.lineTo(150,100)
+// canvas2D.closePath()
+// canvas2D.fillStyle='#6dbdcd'
+// canvas2D.fill() //以上代码试验完毕 以下代码开启另一个canvas
+
+//开始绘制钟表
+
+</script>
+
+</html>
